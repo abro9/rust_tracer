@@ -13,6 +13,18 @@ impl Vec3 {
     pub fn s_mult(&self, scalar: f64) -> Vec3 {
         Vec3::new(self[0] * scalar, self[1] * scalar, self[2] * scalar)
     }
+    
+    pub fn v_add(&self, op: &Vec3) -> Vec3 {
+        Vec3::new(self[0] + op[0],
+                  self[1] + op[1],
+                  self[2] + op[2])
+    }
+
+    pub fn v_sub(&self, op: &Vec3) -> Vec3 {
+        Vec3::new(self[0] - op[0],
+                  self[1] - op[1],
+                  self[2] - op[2])
+    }
 
     pub fn dot(&self, other: &Vec3) -> f64 {
         self.e[0] * other.e[0] + self.e[1] * other.e[1] + self.e[2] * other.e[2]
@@ -41,6 +53,16 @@ impl Add for Vec3 {
         Vec3::new(self.e[0] + other.e[0],
                   self.e[1] + other.e[1],
                   self.e[2] + other.e[2])
+    } 
+}
+
+impl Sub for Vec3 {
+    type Output = Vec3;
+
+    fn sub(self, other: Vec3) -> Vec3 {
+        Vec3::new(self.e[0] - other.e[0],
+                  self.e[1] - other.e[1],
+                  self.e[2] - other.e[2])
     } 
 }
 
