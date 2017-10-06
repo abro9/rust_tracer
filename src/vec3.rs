@@ -46,6 +46,12 @@ impl Vec3 {
     }
 }
 
+impl Clone for Vec3 {
+    fn clone(&self) -> Vec3 {
+        Vec3::new(self[0], self[1], self[2])
+    }
+}
+
 impl Add for Vec3 {
     type Output = Vec3;
 
