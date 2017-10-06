@@ -18,8 +18,8 @@ impl Ray {
              dir: e }
     }
 
-    pub fn pt_at_t(self, t: f64) -> Vec3 {
-        self.origin + (self.dir * t)    
+    pub fn pt_at_t(&self, t: f64) -> Vec3 {
+        self.origin.v_add(&self.dir.s_mult(t))    
     }
 
     pub fn color(&self) -> Vec3 {
