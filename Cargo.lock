@@ -1,4 +1,4 @@
 [root]
-name = "raytracer"
+name = "rust_tracer"
 version = "0.1.0"
 

@@ -10,6 +10,10 @@ impl Vec3 {
         Vec3{ e: [e0, e1, e2] }
     }
 
+    pub fn s_mult(&self, scalar: f64) -> Vec3 {
+        Vec3::new(self[0] * scalar, self[1] * scalar, self[2] * scalar)
+    }
+
     pub fn dot(&self, other: &Vec3) -> f64 {
         self.e[0] * other.e[0] + self.e[1] * other.e[1] + self.e[2] * other.e[2]
     }
