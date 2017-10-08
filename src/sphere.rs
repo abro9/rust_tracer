@@ -2,18 +2,22 @@ use std::f64;
 use ::vec3::Vec3;
 use ::ray::Ray;
 use ::hitable::{Hitable, HitRecord};
+use ::material::Material;
 
 pub struct Sphere {
     pub center: Vec3,
     pub radius: f64,
+    pub material: Box<Material>,
 }
 
 impl Sphere {
-    pub fn new(c: (f64, f64, f64), r: f64) -> Sphere {
+    pub fn new(c: (f64, f64, f64), r: f64, m_type: char, m_alb: (f64, f64, f64)) -> Sphere {
+        //if m_type == 'l' {         <- use an enum for different types of materials
         Sphere{ center: Vec3::new(c.0, c.1, c.2),
-                radius: r}
+                radius: r
+                material: }
     }
-    pub fn new_v(c: &Vec3, r: f64) -> Sphere {
+    pub fn new_v(c: &Vec3, r: f64, m: &Vec3) -> Sphere {
         Sphere{ center: Vec3::new(c[0], c[1], c[2]),
                 radius: r}
     }

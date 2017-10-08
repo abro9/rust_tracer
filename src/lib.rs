@@ -7,3 +7,4 @@ pub mod color;
 pub mod hitable;
 pub mod hitlist;
 pub mod camera;
+pub mod material;
