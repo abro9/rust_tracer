@@ -1,6 +1,7 @@
 use std::f64;
 use std::ops::*;
 
+#[derive(Copy)]
 pub struct Vec3 {
     e : [f64; 3],
 }
@@ -54,7 +55,6 @@ impl Clone for Vec3 {
 
 impl Add for Vec3 {
     type Output = Vec3;
-
     fn add(self, other: Vec3) -> Vec3 {
         Vec3::new(self.e[0] + other.e[0],
                   self.e[1] + other.e[1],
@@ -64,7 +64,6 @@ impl Add for Vec3 {
 
 impl Sub for Vec3 {
     type Output = Vec3;
-
     fn sub(self, other: Vec3) -> Vec3 {
         Vec3::new(self.e[0] - other.e[0],
                   self.e[1] - other.e[1],
@@ -72,9 +71,15 @@ impl Sub for Vec3 {
     } 
 }
 
+impl Mul for Vec3 {
+    type Output = Vec3;
+    fn mul(self, other:Vec3) -> Vec3 {
+        Vec3::new(self[0] * other[0], self[1] * other[1], self[2] * other[2])
+    }
+}
+
 impl Mul<f64> for Vec3 {
     type Output = Vec3;
-
     fn mul(self, other:f64) -> Vec3 {
         Vec3::new(self.e[0] * other,
                   self.e[1] * other,
@@ -82,9 +87,17 @@ impl Mul<f64> for Vec3 {
     }
 }
 
+impl Mul<Vec3> for f64 {
+    type Output = Vec3;
+    fn mul(self, other:Vec3) -> Vec3 {
+        Vec3::new(self * other[0],
+                  self * other[1],
+                  self * other[2])
+    }
+}
+
 impl Div<f64> for Vec3 {
     type Output = Vec3;
-
     fn div(self, other: f64) -> Vec3 {
         Vec3::new(self.e[0] / other,
                   self.e[1] / other,
@@ -94,7 +107,6 @@ impl Div<f64> for Vec3 {
 
 impl Index<usize> for Vec3 {
     type Output = f64;
-
     fn index(&self, i: usize) -> &f64 {
         &self.e[i]
     }

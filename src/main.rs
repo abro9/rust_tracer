@@ -9,11 +9,12 @@ use rust_tracer::sphere::Sphere;
 use rust_tracer::color;
 use rust_tracer::hitlist::HitList;
 use rust_tracer::camera::Camera;
+use rust_tracer::material::Material;
 
 fn main() {
     let nx: i32 = 2000;
     let ny: i32 = 1000;
-    let ns: i32 = 10;
+    let ns: i32 = 100;
 
     let nx_f = nx as f64;
     let ny_f = ny as f64;
@@ -28,14 +29,25 @@ fn main() {
     let vertical = Vec3::new(0.0, 2.0, 0.0);
     let origin = Vec3::new(0.0, 0.0, 0.0);
 
-    let cam = Camera::new_v(&lower_left_corner, &horizontal, &vertical, &origin);
+    let cam = Camera::new_v(lower_left_corner, horizontal, vertical, origin);
 
-    let s = Sphere::new((0.0, 0.0, -1.0), 0.5);
-    let s2 = Sphere::new((0.0, -100.5, -1.0), 100.0);
+    let m = Material::new('l', 0.3, 0.3, 0.8);
+    let m2 = Material::new('m', 0.8, 0.8, 0.8);
+    let m3 = Material::new('l', 0.8, 0.8, 0.0);
+    let m4 = Material::new('l', 0.5, 0.5, 0.5);
+
+    let s = Sphere::new((0.0, 0.0, -1.0), 0.5, &m4);
+    let s2 = Sphere::new((0.0, -100.5, -1.0), 100.0, &m4);
+    //let s3 = Sphere::new((2.0, -0.02488, -2.0), 0.5, &m2);
+    //let s4 = Sphere::new((-2.0, -0.02488, -2.0), 0.5, &m2);
+    let s3 = Sphere::new((1.0, 0.0, -1.0), 0.5, &m2);
+    let s4 = Sphere::new((-1.0, 0.0, -1.0), 0.5, &m2);
 
     let mut world = HitList::new();
     world.add_sphere(s);
     world.add_sphere(s2);
+    world.add_sphere(s3);
+    world.add_sphere(s4);
 
     for j in (0..ny).rev() {
         for i in 0..nx{
@@ -44,9 +56,9 @@ fn main() {
                 let u = ((i as f64) + rand::thread_rng().next_f64()) / nx_f;
                 let v = (j as f64 + rand::thread_rng().next_f64()) / ny_f;
 
-                let ray = cam.get_ray(u, v);
+                let ray = (cam).get_ray(u, v);
 
-                let c = color::color(&ray, &world);
+                let c = color::color(&ray, &world, 0);
                 rgb.0 += c[0];
                 rgb.1 += c[1];
                 rgb.2 += c[2];
@@ -57,6 +69,10 @@ fn main() {
             rgb.2 = (rgb.2 / ns_f ).sqrt(); 
 
             let irgb = (Vec3::new(rgb.0, rgb.1, rgb.2)) * 255.99; 
+
+            if irgb[0] > 255.99 {255.99} else {irgb[0]};
+            if irgb[1] > 255.99 {255.99} else {irgb[1]};
+            if irgb[2] > 255.99 {255.99} else {irgb[2]};
 
             let ir = irgb[0] as i32;
             let ig = irgb[1] as i32;
