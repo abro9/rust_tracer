@@ -12,12 +12,18 @@ pub fn new_color(r: &Ray, world: &HitList, lights: &Vec<Light>) -> Vec3 {
     
     match t {
         Some(hr) => {
-            let light_v = lights[0].location - hr.p;
-            let atten = 1.0 / light_v.squared_length();
+            let l = &lights[0];
+            let light_v = l.location - hr.p;
+            let atten = l.intensity / light_v.squared_length();
             let light_v = light_v.get_unit();
+            let h = (light_v + (-1.0 * r.dir)).get_unit();
 
             let n_dot_l = light_v.dot(&hr.normal);
-            hr.mat.diffuse * atten * 0.0_f64.max( n_dot_l) 
+            let n_dot_h = h.dot(&hr.normal);
+            let diffuse = hr.mat.diffuse * atten * n_dot_l.max(0.0) * l.color;
+            let spec = hr.mat.specular * atten * n_dot_h.max(0.0).powi(hr.mat.phong) * l.color;
+            //if spec.lengthprintln!("{}", spec.length());
+            diffuse + spec
         }
 
         None => {

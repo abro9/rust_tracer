@@ -35,10 +35,10 @@ fn main() {
 
     let cam = Camera::new_v(lower_left_corner, horizontal, vertical, origin);
 
-    let m = Material::new('l', 0.3, 0.3, 0.8);
-    let m2 = Material::new('m', 0.8, 0.8, 0.8);
-    let m3 = Material::new('l', 0.8, 0.8, 0.0);
-    let m4 = Material::new('l', 0.5, 0.5, 0.5);
+    let m = Material::new('l', 0.3, 0.3, 0.8, 0.5, 0.5, 0.5, 8000);
+    let m2 = Material::new('m', 0.3, 0.8, 0.3, 0.5, 0.5, 0.5, 3000);
+    let m3 = Material::new('l', 0.8, 0.3, 0.3, 0.5, 0.5, 0.5, 100);
+    let m4 = Material::new('l', 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 10);
 
     let s = Sphere::new((0.0, 0.0, -1.0), 0.5, &m);
     let s2 = Sphere::new((0.0, -100.5, -1.0), 100.0, &m4);
@@ -53,7 +53,7 @@ fn main() {
     world.add_sphere(s3);
     world.add_sphere(s4);
 
-    let l = Light::new('p', (-2.0, 2.0, 0.0), (5.0, 5.0, 5.0));
+    let l = Light::new('p', (-7.0, 3.5, 5.0), (1.0, 1.0, 1.0), 50.0);
     let mut lights : Vec<Light> = Vec::new();
     lights.push(l);
 
@@ -77,19 +77,17 @@ fn main() {
                 rgb.2 += c[2];
             }
 
-            rgb.0 = (rgb.0 / rpp_f ).sqrt(); 
-            rgb.1 = (rgb.1 / rpp_f ).sqrt(); 
-            rgb.2 = (rgb.2 / rpp_f ).sqrt(); 
+            rgb.0 = (rgb.0 / rpp_f ).sqrt() * 255.99; 
+            rgb.1 = (rgb.1 / rpp_f ).sqrt() * 255.99; 
+            rgb.2 = (rgb.2 / rpp_f ).sqrt() * 255.99; 
 
-            let irgb = (Vec3::new(rgb.0, rgb.1, rgb.2)) * 255.99; 
+            rgb.0 = if rgb.0 > 255.99 {255.99} else {rgb.0};
+            rgb.1 = if rgb.1 > 255.99 {255.99} else {rgb.1};
+            rgb.2 = if rgb.2 > 255.99 {255.99} else {rgb.2};
 
-            if irgb[0] > 255.99 {255.99} else {irgb[0]};
-            if irgb[1] > 255.99 {255.99} else {irgb[1]};
-            if irgb[2] > 255.99 {255.99} else {irgb[2]};
-
-            let ir = irgb[0] as i32;
-            let ig = irgb[1] as i32;
-            let ib = irgb[2] as i32;
+            let ir = rgb.0 as i32;
+            let ig = rgb.1 as i32;
+            let ib = rgb.2 as i32;
 
             rgb_data.push((ir, ig, ib));
         }   

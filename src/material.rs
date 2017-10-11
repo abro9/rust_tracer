@@ -19,16 +19,22 @@ pub enum MatType {
 
 pub struct Material{
     pub diffuse: Vec3,
+    pub specular: Vec3,
+    pub phong: i32,
     pub mat_type: MatType,
 }
 
 impl Material {
-    pub fn new(t: char, a0: f64, a1: f64, a2: f64) -> Material {
+    pub fn new(t: char, d0: f64, d1: f64, d2: f64, s0: f64, s1: f64, s2: f64, p: i32) -> Material {
         if t == 'l' {
-            Material { diffuse : Vec3::new(a0, a1, a2),
+            Material { diffuse : Vec3::new(d0, d1, d2),
+                       specular : Vec3::new(s0, s1, s2),
+                       phong : p,
                        mat_type : MatType::Lambertian } }
         else {
-            Material { diffuse : Vec3::new(a0, a1, a2),
+            Material { diffuse : Vec3::new(d0, d1, d2),
+                       specular : Vec3::new(s0, s1, s2),
+                       phong : p,
                        mat_type : MatType::Metal } }
     }
 
@@ -57,10 +63,11 @@ impl Material {
 
 impl Clone for Material {
     fn clone(&self) -> Material {
-        let a = (self.diffuse[0], self.diffuse[1], self.diffuse[2]);
+        let d = (self.diffuse[0], self.diffuse[1], self.diffuse[2]);
+        let s = (self.specular[0], self.specular[1], self.specular[2]);
         match self.mat_type {
-            MatType::Lambertian => Material::new('l', a.0, a.1, a.2),
-            MatType::Metal => Material::new('m', a.0, a.1, a.2),
+            MatType::Lambertian => Material::new('l', d.0, d.1, d.2, s.0, s.1, s.2, self.phong),
+            MatType::Metal => Material::new('m', d.0, d.1, d.2, s.0, s.1, s.2, self.phong),
         }
     }
 }
