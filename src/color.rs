@@ -12,9 +12,9 @@ pub fn new_color(r: &Ray, world: &HitList, lights: &Vec<Light>) -> Vec3 {
     
     match t {
         Some(hr) => {
-            if hr.mat.phong == 5 {
-                println!("plane");
-            }
+            //if hr.mat.phong == 5 {
+            //    println!("plane");
+            //}
             let l = &lights[0];
             let light_v = l.location - hr.p;
             let atten = l.intensity / light_v.squared_length();
@@ -25,7 +25,8 @@ pub fn new_color(r: &Ray, world: &HitList, lights: &Vec<Light>) -> Vec3 {
             let n_dot_h = h.dot(&hr.normal);
             let diffuse = hr.mat.diffuse * atten * n_dot_l.max(0.0) * l.color;
             let spec = hr.mat.specular * atten * n_dot_h.max(0.0).powi(hr.mat.phong) * l.color;
-            //if spec.lengthprintln!("{}", spec.length());
+            //if (diffuse[0] == 0.0) & (hr.mat.phong == 5) {println!("{},{},{},{}", diffuse[0], diffuse[1], diffuse[2], n_dot_l)};
+
             diffuse + spec
         }
 

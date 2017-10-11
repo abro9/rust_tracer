@@ -40,7 +40,7 @@ fn main() {
     let m2 = Material::new('m', 0.3, 0.8, 0.3, 0.5, 0.5, 0.5, 3000);
     let m3 = Material::new('l', 0.8, 0.3, 0.3, 0.5, 0.5, 0.5, 100);
     let m4 = Material::new('l', 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 10);
-    let m5 = Material::new('l', 1.0, 1.0, 1.0, 0.5, 0.5, 0.5, 10);
+    let m5 = Material::new('l', 0.0, 0.0, 1.0, 0.5, 0.5, 0.5, 5);
 
     let s = Sphere::new((0.0, 0.0, -1.0), 0.5, &m);
     let s2 = Sphere::new((0.0, -100.5, -1.0), 100.0, &m4);
@@ -49,7 +49,7 @@ fn main() {
     //let s3 = Sphere::new((1.0, 0.0, -1.0), 0.5, &m2);
     //let s4 = Sphere::new((-1.0, 0.0, -1.0), 0.5, &m2);
 
-    let p = Plane::new((0.0, 0.0, -1.0), 1.0, &m5);
+    let p = Plane::new((0.0, 0.0, -1.0), 5.0, &m5);
 
     let mut world = HitList::new();
     world.add_sphere(s);

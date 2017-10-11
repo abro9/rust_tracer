@@ -32,6 +32,7 @@ impl Hitable for HitList {
         for obj in self.members.iter(){
             if let Some(hr) = obj.hit(r, t_min, closest_so_far) {
                 closest_so_far = hr.t;
+                //if hr.mat.phong == 5 {println!("padpfja");};
                 hit = Some(hr)
             }                            
         }

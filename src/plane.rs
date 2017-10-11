@@ -12,7 +12,7 @@ pub struct Plane {
 
 impl Plane {
     pub fn new(n: (f64, f64, f64), d: f64, m: &Material) -> Plane {
-        Plane{ normal: Vec3::new(n.0, n.1, n.2).get_unit(),
+        Plane{ normal: Vec3::new(n.0, n.1, n.2).get_unit() * -1.0,
                 d: d,
                 material: m.clone()}
     }
@@ -30,7 +30,7 @@ impl Hitable for Plane {
         let denominator = self.normal.dot(&r.dir);
 
         if denominator != 0.0{
-            let tmp = (self.d - self.normal.dot(&r.origin)) / denominator;
+            let tmp = (-self.d - (-1.0 * self.normal).dot(&r.origin)) / denominator;
             if (tmp < t_max) & (tmp > t_min) {
                 let p = r.pt_at_t(tmp);
                 hit = Some(HitRecord {
