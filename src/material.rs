@@ -21,24 +21,29 @@ pub struct Material{
     pub diffuse: Vec3,
     pub specular: Vec3,
     pub phong: i32,
+    pub ideal_spec: Vec3,
     pub mat_type: MatType,
 }
 
 impl Material {
-    pub fn new(t: char, d0: f64, d1: f64, d2: f64, s0: f64, s1: f64, s2: f64, p: i32) -> Material {
+    pub fn new(t: char,
+               d0: f64, d1: f64, d2: f64,
+               s0: f64, s1: f64, s2: f64,
+               i0: f64, i1: f64, i2: f64,
+               p: i32) -> Material {
         if t == 'l' {
             Material { diffuse : Vec3::new(d0, d1, d2),
                        specular : Vec3::new(s0, s1, s2),
                        phong : p,
+                       ideal_spec : Vec3::new(i0, i1, i2),
                        mat_type : MatType::Lambertian } }
         else {
             Material { diffuse : Vec3::new(d0, d1, d2),
                        specular : Vec3::new(s0, s1, s2),
                        phong : p,
+                       ideal_spec : Vec3::new(i0, i1, i2),
                        mat_type : MatType::Metal } }
     }
-
-    pub fn get_diffuse(&self) -> Vec3 { self.diffuse }
 
     pub fn scatter(&self, r_in: &Ray, hr: &HitRecord) -> MatRecord {
         match self.mat_type {
@@ -65,9 +70,10 @@ impl Clone for Material {
     fn clone(&self) -> Material {
         let d = (self.diffuse[0], self.diffuse[1], self.diffuse[2]);
         let s = (self.specular[0], self.specular[1], self.specular[2]);
+        let i = (self.ideal_spec[0], self.ideal_spec[1], self.ideal_spec[2]);
         match self.mat_type {
-            MatType::Lambertian => Material::new('l', d.0, d.1, d.2, s.0, s.1, s.2, self.phong),
-            MatType::Metal => Material::new('m', d.0, d.1, d.2, s.0, s.1, s.2, self.phong),
+            MatType::Lambertian => Material::new('l', d.0, d.1, d.2, s.0, s.1, s.2, i.0, i.1, i.2, self.phong),
+            MatType::Metal => Material::new('m', d.0, d.1, d.2, s.0, s.1, s.2, i.0, i.1, i.2, self.phong),
         }
     }
 }

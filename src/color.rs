@@ -4,30 +4,43 @@ use ::ray::Ray;
 use ::light::Light;
 use ::hitable::Hitable;
 use ::hitlist::HitList;
+use ::material::reflect;
 use std::f64;
 
-pub fn new_color(r: &Ray, world: &HitList, lights: &Vec<Light>) -> Vec3 {
-    
-    let t = world.hit(r, 0.0, f64::MAX);
-    
+pub fn new_color(r: &Ray, world: &HitList, lights: &Vec<Light>, depth: u32) -> Vec3 {
+
+    let t;
+    if depth == 0 {
+        t = world.hit(r, 0.0, f64::MAX);
+    }
+    else {
+        t = world.hit(r, 0.05, f64::MAX);
+    }
+
     match t {
         Some(hr) => {
-            //if hr.mat.phong == 5 {
-            //    println!("plane");
-            //}
             let l = &lights[0];
             let light_v = l.location - hr.p;
             let atten = l.intensity / light_v.squared_length();
             let light_v = light_v.get_unit();
             let h = (light_v + (-1.0 * r.dir)).get_unit();
 
+            let shadow_ray = Ray::new_v(hr.p, light_v);
+            let t = world.hit(&shadow_ray, 0.1, (1.0/atten).sqrt() * l.intensity.sqrt());
+            let shadow_vec = match t {
+                Some(_) => Vec3::new(0.0, 0.0, 0.0),
+                None => Vec3::new(1.0, 1.0, 1.0) };
+
             let n_dot_l = light_v.dot(&hr.normal);
             let n_dot_h = h.dot(&hr.normal);
-            let diffuse = hr.mat.diffuse * atten * n_dot_l.max(0.0) * l.color;
-            let spec = hr.mat.specular * atten * n_dot_h.max(0.0).powi(hr.mat.phong) * l.color;
-            //if (diffuse[0] == 0.0) & (hr.mat.phong == 5) {println!("{},{},{},{}", diffuse[0], diffuse[1], diffuse[2], n_dot_l)};
+            let diffuse = hr.mat.diffuse * atten * n_dot_l.max(0.0) * l.color * shadow_vec;
+            let spec = hr.mat.specular * atten * n_dot_h.max(0.0).powi(hr.mat.phong) * l.color * shadow_vec;
 
-            diffuse + spec
+            if depth < 50 {
+                let rfl_ray = Ray::new_v(hr.p, reflect(r.dir, hr.normal)); 
+                diffuse + spec + shadow_vec * hr.mat.ideal_spec * new_color(&rfl_ray, world, lights, depth + 1) 
+            }
+            else { hr.mat.diffuse }
         }
 
         None => {

@@ -19,7 +19,7 @@ use rust_tracer::plane::Plane;
 
 const NX: usize = 1200;
 const NY: usize = 600;
-const RPP: usize = 50;
+const RPP: usize = 100;
 
 fn main() {
     let nx_f = NX as f64;
@@ -36,20 +36,20 @@ fn main() {
 
     let cam = Camera::new_v(lower_left_corner, horizontal, vertical, origin);
 
-    let m = Material::new('l', 0.3, 0.3, 0.8, 0.5, 0.5, 0.5, 8000);
-    let m2 = Material::new('m', 0.3, 0.8, 0.3, 0.5, 0.5, 0.5, 3000);
-    let m3 = Material::new('l', 0.8, 0.3, 0.3, 0.5, 0.5, 0.5, 100);
-    let m4 = Material::new('l', 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 10);
-    let m5 = Material::new('l', 0.0, 0.0, 1.0, 0.5, 0.5, 0.5, 5);
+    let m = Material::new('l', 0.8, 0.3, 0.3, 0.5, 0.5, 0.5, 0.0, 0.0, 0.0, 200);
+    let m2 = Material::new('m', 0.3, 0.8, 0.3, 0.5, 0.5, 0.5, 0.0, 0.0, 0.0, 200);
+    let m3 = Material::new('l', 0.3, 0.3, 0.8, 0.5, 0.5, 0.5, 0.0, 0.0, 0.0, 200);
+    let m4 = Material::new('l', 0.35, 0.35, 0.35, 0.5, 0.5, 0.5, 0.8, 0.8, 0.8, 10);
+    let m5 = Material::new('l', 0.0, 0.0, 0.0, 0.5, 0.5, 0.5, 1.0, 1.0, 1.0, 5);
 
-    let s = Sphere::new((0.0, 0.0, -1.0), 0.5, &m);
-    let s2 = Sphere::new((0.0, -100.5, -1.0), 100.0, &m4);
-    let s3 = Sphere::new((2.0, -0.02488, -2.0), 0.5, &m3);
-    let s4 = Sphere::new((-2.0, -0.02488, -2.0), 0.5, &m2);
+    let s = Sphere::new((0.0, -1.0, -2.0), 0.5, &m2);
+    let s2 = Sphere::new((0.0, -101.5, -2.0), 100.0, &m4);
+    let s3 = Sphere::new((2.0, -1.02488, -3.0), 0.5, &m3);
+    let s4 = Sphere::new((-2.0, -1.02488, -3.0), 0.5, &m);
     //let s3 = Sphere::new((1.0, 0.0, -1.0), 0.5, &m2);
     //let s4 = Sphere::new((-1.0, 0.0, -1.0), 0.5, &m2);
 
-    let p = Plane::new((0.0, 0.0, -1.0), 5.0, &m5);
+    let p = Plane::new((0.0, 0.0, -1.0), 10.0, &m5);
 
     let mut world = HitList::new();
     world.add_sphere(s);
@@ -75,7 +75,7 @@ fn main() {
 
                 let ray = (cam).get_ray(u, v);
 
-                let c = color::new_color(&ray, &world, &lights);
+                let c = color::new_color(&ray, &world, &lights, 0);
                 //let c = color::color(&ray, &world, 0);
                 rgb.0 += c[0];
                 rgb.1 += c[1];
