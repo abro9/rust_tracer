@@ -18,26 +18,28 @@ pub enum MatType {
 }
 
 pub struct Material{
-    pub albedo: Vec3,
+    pub diffuse: Vec3,
     pub mat_type: MatType,
 }
 
 impl Material {
     pub fn new(t: char, a0: f64, a1: f64, a2: f64) -> Material {
         if t == 'l' {
-            Material { albedo : Vec3::new(a0, a1, a2),
+            Material { diffuse : Vec3::new(a0, a1, a2),
                        mat_type : MatType::Lambertian } }
         else {
-            Material { albedo : Vec3::new(a0, a1, a2),
+            Material { diffuse : Vec3::new(a0, a1, a2),
                        mat_type : MatType::Metal } }
     }
+
+    pub fn get_diffuse(&self) -> Vec3 { self.diffuse }
 
     pub fn scatter(&self, r_in: &Ray, hr: &HitRecord) -> MatRecord {
         match self.mat_type {
             MatType::Lambertian => {        
                 let target = rand_in_unit_sphere() + hr.p + hr.normal;
                 let new_r = Ray::new_v(hr.p, target - hr.p);
-                MatRecord{ attenuation: self.albedo,
+                MatRecord{ attenuation: self.diffuse,
                            scattered: new_r,
                            correct_dir: true }
             }
@@ -45,7 +47,7 @@ impl Material {
             MatType::Metal => {
                 let reflected = reflect(r_in.dir, hr.normal);
                 let new_r = Ray::new_v(hr.p, reflected);
-                MatRecord{ attenuation: self.albedo,
+                MatRecord{ attenuation: self.diffuse,
                            scattered: new_r,
                            correct_dir: hr.normal.dot(&reflected) > 0.0 }
             }
@@ -55,7 +57,7 @@ impl Material {
 
 impl Clone for Material {
     fn clone(&self) -> Material {
-        let a = (self.albedo[0], self.albedo[1], self.albedo[2]);
+        let a = (self.diffuse[0], self.diffuse[1], self.diffuse[2]);
         match self.mat_type {
             MatType::Lambertian => Material::new('l', a.0, a.1, a.2),
             MatType::Metal => Material::new('m', a.0, a.1, a.2),

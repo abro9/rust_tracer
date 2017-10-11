@@ -1,6 +1,8 @@
 extern crate rust_tracer;
 extern crate rand;
+extern crate pbr;
 
+use pbr::ProgressBar;
 use rand::Rng;
 use std::f64;
 use std::fs::File;
@@ -12,6 +14,7 @@ use rust_tracer::color;
 use rust_tracer::hitlist::HitList;
 use rust_tracer::camera::Camera;
 use rust_tracer::material::Material;
+use rust_tracer::light::Light;
 
 const NX: usize = 1200;
 const NY: usize = 600;
@@ -39,7 +42,7 @@ fn main() {
 
     let s = Sphere::new((0.0, 0.0, -1.0), 0.5, &m);
     let s2 = Sphere::new((0.0, -100.5, -1.0), 100.0, &m4);
-    let s3 = Sphere::new((2.0, -0.02488, -2.0), 0.5, &m2);
+    let s3 = Sphere::new((2.0, -0.02488, -2.0), 0.5, &m3);
     let s4 = Sphere::new((-2.0, -0.02488, -2.0), 0.5, &m2);
     //let s3 = Sphere::new((1.0, 0.0, -1.0), 0.5, &m2);
     //let s4 = Sphere::new((-1.0, 0.0, -1.0), 0.5, &m2);
@@ -50,7 +53,15 @@ fn main() {
     world.add_sphere(s3);
     world.add_sphere(s4);
 
+    let l = Light::new('p', (-2.0, 2.0, 0.0), (5.0, 5.0, 5.0));
+    let mut lights : Vec<Light> = Vec::new();
+    lights.push(l);
+
+
+    let mut pb = ProgressBar::new(NY as u64);
+
     for j in (0..NY).rev() {
+        pb.inc();
         for i in 0..NX{
             let mut rgb: (f64, f64, f64) = (0.0 , 0.0, 0.0);
             for _ in 0..RPP{        
@@ -59,7 +70,8 @@ fn main() {
 
                 let ray = (cam).get_ray(u, v);
 
-                let c = color::color(&ray, &world, 0);
+                let c = color::new_color(&ray, &world, &lights);
+                //let c = color::color(&ray, &world, 0);
                 rgb.0 += c[0];
                 rgb.1 += c[1];
                 rgb.2 += c[2];
@@ -80,15 +92,21 @@ fn main() {
             let ib = irgb[2] as i32;
 
             rgb_data.push((ir, ig, ib));
-        }    
+        }   
     }
+    pb.finish_print("\ndone! writing ppm now.\n");
     save_file(&rgb_data);
 }
 
 fn save_file(data: &Vec<(i32, i32, i32)>){
     let mut file = File::create("test8.ppm").unwrap();
     file.write_fmt(format_args!("P3\n{} {}\n{}\n", NX, NY, 255)).unwrap();
+
+    let mut pb = ProgressBar::new(data.len() as u64);
+
     for rgb in data.iter() {
         file.write_fmt(format_args!("{} {} {}\n", rgb.0, rgb.1, rgb.2)).unwrap();
+        pb.inc();
     }
+    pb.finish_print("\nimage saved!");
 }
