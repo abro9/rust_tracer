@@ -10,3 +10,4 @@ pub mod hitlist;
 pub mod camera;
 pub mod material;
 pub mod light;
+pub mod plane;

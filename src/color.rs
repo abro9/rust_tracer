@@ -12,6 +12,9 @@ pub fn new_color(r: &Ray, world: &HitList, lights: &Vec<Light>) -> Vec3 {
     
     match t {
         Some(hr) => {
+            if hr.mat.phong == 5 {
+                println!("plane");
+            }
             let l = &lights[0];
             let light_v = l.location - hr.p;
             let atten = l.intensity / light_v.squared_length();

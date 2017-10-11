@@ -1,5 +1,6 @@
 use ::ray::Ray;
 use ::sphere::Sphere;
+use ::plane::Plane;
 use ::hitable::{Hitable, HitRecord};
 
 pub struct HitList {
@@ -14,6 +15,11 @@ impl HitList {
 
     pub fn add_sphere(&mut self, s: Sphere){
         let b = Box::new(s);
+        self.members.push(b);
+    }
+
+    pub fn add_plane(&mut self, p: Plane){
+        let b = Box::new(p);
         self.members.push(b);
     }
 }
