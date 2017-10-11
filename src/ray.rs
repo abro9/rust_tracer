@@ -18,7 +18,6 @@ impl Ray {
 
     pub fn pt_at_t(&self, t: f64) -> Vec3 {
         self.origin + self.dir * t
-        //self.origin.v_add(&self.dir.s_mult(t))    
     }
 }
 

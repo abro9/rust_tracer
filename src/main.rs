@@ -2,8 +2,10 @@ extern crate rust_tracer;
 extern crate rand;
 
 use rand::Rng;
-
 use std::f64;
+use std::fs::File;
+use std::io::Write;
+
 use rust_tracer::vec3::Vec3;
 use rust_tracer::sphere::Sphere;
 use rust_tracer::color;
@@ -11,18 +13,17 @@ use rust_tracer::hitlist::HitList;
 use rust_tracer::camera::Camera;
 use rust_tracer::material::Material;
 
-fn main() {
-    let nx: i32 = 2000;
-    let ny: i32 = 1000;
-    let ns: i32 = 100;
+const NX: usize = 1200;
+const NY: usize = 600;
+const RPP: usize = 50;
 
-    let nx_f = nx as f64;
-    let ny_f = ny as f64;
-    let ns_f = ns as f64;
+fn main() {
+    let nx_f = NX as f64;
+    let ny_f = NY as f64;
+    let rpp_f = RPP as f64;
     
-    println!("P3");
-    println!("{} {}", nx, ny);
-    println!("255");
+    let data_size: usize = NX * NY;
+    let mut rgb_data: Vec<(i32,i32,i32)> = Vec::with_capacity(data_size);
 
     let lower_left_corner = Vec3::new(-2.0, -1.0, -1.0);
     let horizontal = Vec3::new(4.0, 0.0, 0.0);
@@ -36,12 +37,12 @@ fn main() {
     let m3 = Material::new('l', 0.8, 0.8, 0.0);
     let m4 = Material::new('l', 0.5, 0.5, 0.5);
 
-    let s = Sphere::new((0.0, 0.0, -1.0), 0.5, &m4);
+    let s = Sphere::new((0.0, 0.0, -1.0), 0.5, &m);
     let s2 = Sphere::new((0.0, -100.5, -1.0), 100.0, &m4);
-    //let s3 = Sphere::new((2.0, -0.02488, -2.0), 0.5, &m2);
-    //let s4 = Sphere::new((-2.0, -0.02488, -2.0), 0.5, &m2);
-    let s3 = Sphere::new((1.0, 0.0, -1.0), 0.5, &m2);
-    let s4 = Sphere::new((-1.0, 0.0, -1.0), 0.5, &m2);
+    let s3 = Sphere::new((2.0, -0.02488, -2.0), 0.5, &m2);
+    let s4 = Sphere::new((-2.0, -0.02488, -2.0), 0.5, &m2);
+    //let s3 = Sphere::new((1.0, 0.0, -1.0), 0.5, &m2);
+    //let s4 = Sphere::new((-1.0, 0.0, -1.0), 0.5, &m2);
 
     let mut world = HitList::new();
     world.add_sphere(s);
@@ -49,10 +50,10 @@ fn main() {
     world.add_sphere(s3);
     world.add_sphere(s4);
 
-    for j in (0..ny).rev() {
-        for i in 0..nx{
+    for j in (0..NY).rev() {
+        for i in 0..NX{
             let mut rgb: (f64, f64, f64) = (0.0 , 0.0, 0.0);
-            for _ in 0..ns{        
+            for _ in 0..RPP{        
                 let u = ((i as f64) + rand::thread_rng().next_f64()) / nx_f;
                 let v = (j as f64 + rand::thread_rng().next_f64()) / ny_f;
 
@@ -64,9 +65,9 @@ fn main() {
                 rgb.2 += c[2];
             }
 
-            rgb.0 = (rgb.0 / ns_f ).sqrt(); 
-            rgb.1 = (rgb.1 / ns_f ).sqrt(); 
-            rgb.2 = (rgb.2 / ns_f ).sqrt(); 
+            rgb.0 = (rgb.0 / rpp_f ).sqrt(); 
+            rgb.1 = (rgb.1 / rpp_f ).sqrt(); 
+            rgb.2 = (rgb.2 / rpp_f ).sqrt(); 
 
             let irgb = (Vec3::new(rgb.0, rgb.1, rgb.2)) * 255.99; 
 
@@ -78,7 +79,16 @@ fn main() {
             let ig = irgb[1] as i32;
             let ib = irgb[2] as i32;
 
-            println!("{} {} {}", ir, ig, ib)
+            rgb_data.push((ir, ig, ib));
         }    
+    }
+    save_file(&rgb_data);
+}
+
+fn save_file(data: &Vec<(i32, i32, i32)>){
+    let mut file = File::create("test8.ppm").unwrap();
+    file.write_fmt(format_args!("P3\n{} {}\n{}\n", NX, NY, 255)).unwrap();
+    for rgb in data.iter() {
+        file.write_fmt(format_args!("{} {} {}\n", rgb.0, rgb.1, rgb.2)).unwrap();
     }
 }

@@ -36,7 +36,7 @@ impl Material {
         match self.mat_type {
             MatType::Lambertian => {        
                 let target = rand_in_unit_sphere() + hr.p + hr.normal;
-                let new_r = Ray::new_v(hr.p, (target - hr.p).get_unit());
+                let new_r = Ray::new_v(hr.p, target - hr.p);
                 MatRecord{ attenuation: self.albedo,
                            scattered: new_r,
                            correct_dir: true }
@@ -47,8 +47,7 @@ impl Material {
                 let new_r = Ray::new_v(hr.p, reflected);
                 MatRecord{ attenuation: self.albedo,
                            scattered: new_r,
-                           //correct_dir: true }
-                           correct_dir: hr.normal.dot(&reflected) >= 0.0 }
+                           correct_dir: hr.normal.dot(&reflected) > 0.0 }
             }
         }
     }
