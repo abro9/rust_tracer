@@ -36,16 +36,16 @@ fn main() {
 
     let cam = Camera::new_v(lower_left_corner, horizontal, vertical, origin);
 
-    let m = Material::new('l', 0.8, 0.3, 0.3, 0.5, 0.5, 0.5, 0.0, 0.0, 0.0, 200);
-    let m2 = Material::new('m', 0.3, 0.8, 0.3, 0.5, 0.5, 0.5, 0.0, 0.0, 0.0, 200);
-    let m3 = Material::new('l', 0.3, 0.3, 0.8, 0.5, 0.5, 0.5, 0.0, 0.0, 0.0, 200);
-    let m4 = Material::new('l', 0.35, 0.35, 0.35, 0.5, 0.5, 0.5, 0.8, 0.8, 0.8, 10);
-    let m5 = Material::new('l', 0.0, 0.0, 0.0, 0.5, 0.5, 0.5, 1.0, 1.0, 1.0, 5);
+    let m = Material::new('l', 0.8, 0.3, 0.3, 0.25, 0.25, 0.25, 0.0, 0.0, 0.0, 20);
+    let m2 = Material::new('m', 0.3, 0.8, 0.3, 0.5, 0.5, 0.5, 0.0, 0.0, 0.0, 20);
+    let m3 = Material::new('l', 0.3, 0.3, 0.8, 0.75, 0.75, 0.75, 0.0, 0.0, 0.0, 20);
+    let m4 = Material::new('l', 0.35, 0.35, 0.35, 0.2, 0.2, 0.2, 0.8, 0.8, 0.8, 10);
+    let m5 = Material::new('l', 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 5);
 
-    let s = Sphere::new((0.0, -1.0, -2.0), 0.5, &m2);
-    let s2 = Sphere::new((0.0, -101.5, -2.0), 100.0, &m4);
-    let s3 = Sphere::new((2.0, -1.02488, -3.0), 0.5, &m3);
-    let s4 = Sphere::new((-2.0, -1.02488, -3.0), 0.5, &m);
+    let s = Sphere::new((0.0, -1.0, -4.0), 0.5, &m2);
+    let s2 = Sphere::new((0.0, -101.5, -4.0), 100.0, &m4);
+    let s3 = Sphere::new((2.0, -1.02488, -5.0), 0.5, &m3);
+    let s4 = Sphere::new((-2.0, -1.02488, -5.0), 0.5, &m);
     //let s3 = Sphere::new((1.0, 0.0, -1.0), 0.5, &m2);
     //let s4 = Sphere::new((-1.0, 0.0, -1.0), 0.5, &m2);
 
@@ -58,10 +58,11 @@ fn main() {
     world.add_sphere(s4);
     world.add_plane(p);
 
-    let l = Light::new('p', (-7.0, 3.5, 5.0), (1.0, 1.0, 1.0), 50.0);
+    let ambient = Light::new('p', (0.0, 0.0, 0.0), (1.0, 1.0, 1.0), 1.0);
+    let l = Light::new('p', (-7.0, 3.5, 5.0), (1.0, 1.0, 1.0), 40.0);
     let mut lights : Vec<Light> = Vec::new();
     lights.push(l);
-
+    lights.push(ambient);
 
     let mut pb = ProgressBar::new(NY as u64);
 

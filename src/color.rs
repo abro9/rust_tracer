@@ -19,7 +19,9 @@ pub fn new_color(r: &Ray, world: &HitList, lights: &Vec<Light>, depth: u32) -> V
 
     match t {
         Some(hr) => {
-            let l = &lights[0];
+            //let l = &lights[0];
+            let mut accum = (0.0, 0.0, 0.0);
+            for l in lights.iter() {
             let light_v = l.location - hr.p;
             let atten = l.intensity / light_v.squared_length();
             let light_v = light_v.get_unit();
@@ -36,9 +38,16 @@ pub fn new_color(r: &Ray, world: &HitList, lights: &Vec<Light>, depth: u32) -> V
             let diffuse = hr.mat.diffuse * atten * n_dot_l.max(0.0) * l.color * shadow_vec;
             let spec = hr.mat.specular * atten * n_dot_h.max(0.0).powi(hr.mat.phong) * l.color * shadow_vec;
 
+            accum.0 += diffuse[0] + spec[0];
+            accum.1 += diffuse[1] + spec[1];
+            accum.2 += diffuse[2] + spec[2];
+            }
+            let accum_vec = Vec3::new(accum.0, accum.1, accum.2);
+
             if depth < 50 {
                 let rfl_ray = Ray::new_v(hr.p, reflect(r.dir, hr.normal)); 
-                diffuse + spec + shadow_vec * hr.mat.ideal_spec * new_color(&rfl_ray, world, lights, depth + 1) 
+                //diffuse + spec + shadow_vec * hr.mat.ideal_spec * new_color(&rfl_ray, world, lights, depth + 1) 
+                accum_vec + hr.mat.ideal_spec * new_color(&rfl_ray, world, lights, depth + 1) 
             }
             else { hr.mat.diffuse }
         }
