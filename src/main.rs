@@ -7,6 +7,7 @@ use rand::Rng;
 use std::f64;
 use std::fs::File;
 use std::io::Write;
+use std::env;
 
 use rust_tracer::vec3::Vec3;
 use rust_tracer::sphere::Sphere;
@@ -22,6 +23,12 @@ const NY: usize = 600;
 const RPP: usize = 100;
 
 fn main() {
+    let args: Vec<String> = env::args().collect();
+    let image_file = &args[1];
+    //let scene_file = &args[2];
+
+    //let (world, lights) = parser::parse(scene_file);
+
     let nx_f = NX as f64;
     let ny_f = NY as f64;
     let rpp_f = RPP as f64;
@@ -36,32 +43,37 @@ fn main() {
 
     let cam = Camera::new_v(lower_left_corner, horizontal, vertical, origin);
 
-    let m = Material::new('l', 0.8, 0.3, 0.3, 0.25, 0.25, 0.25, 0.0, 0.0, 0.0, 20);
-    let m2 = Material::new('m', 0.3, 0.8, 0.3, 0.5, 0.5, 0.5, 0.0, 0.0, 0.0, 20);
-    let m3 = Material::new('l', 0.3, 0.3, 0.8, 0.75, 0.75, 0.75, 0.0, 0.0, 0.0, 20);
-    let m4 = Material::new('l', 0.35, 0.35, 0.35, 0.2, 0.2, 0.2, 0.8, 0.8, 0.8, 10);
-    let m5 = Material::new('l', 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 5);
+    let m = Material::new('l', 0.8, 0.3, 0.3, 0.5, 0.5, 0.5, 0.0, 0.0, 0.0, 100);
+    let m2 = Material::new('m', 0.3, 0.8, 0.3, 0.5, 0.5, 0.5, 0.0, 0.0, 0.0, 500);
+    let m3 = Material::new('l', 0.3, 0.3, 0.8, 0.5, 0.5, 0.5, 0.0, 0.0, 0.0, 100);
+    let m4 = Material::new('l', 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 10);
+    let m5 = Material::new('l', 0.2, 0.2, 0.2, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 5);
+    let m6 = Material::new('l', 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 5);
 
     let s = Sphere::new((0.0, -1.0, -4.0), 0.5, &m2);
-    let s2 = Sphere::new((0.0, -101.5, -4.0), 100.0, &m4);
+    let s2 = Sphere::new((0.0, -101.5, -4.0), 100.0, &m5);
     let s3 = Sphere::new((2.0, -1.02488, -5.0), 0.5, &m3);
     let s4 = Sphere::new((-2.0, -1.02488, -5.0), 0.5, &m);
-    //let s3 = Sphere::new((1.0, 0.0, -1.0), 0.5, &m2);
-    //let s4 = Sphere::new((-1.0, 0.0, -1.0), 0.5, &m2);
+    //let s3 = Sphere::new((2.0, 0.5, -5.0), 0.5, &m3);
+    //let s4 = Sphere::new((-2.0, 0.5, -5.0), 0.5, &m);
+    let s5 = Sphere::new((0.0, 2.5, -4.5), 1.5, &m6);
 
-    let p = Plane::new((0.0, 0.0, -1.0), 10.0, &m5);
+    let p = Plane::new((0.0, 0.0, -1.0), 12.0, &m4);
 
     let mut world = HitList::new();
     world.add_sphere(s);
     world.add_sphere(s2);
     world.add_sphere(s3);
     world.add_sphere(s4);
+    world.add_sphere(s5);
     world.add_plane(p);
 
     let ambient = Light::new('p', (0.0, 0.0, 0.0), (1.0, 1.0, 1.0), 1.0);
     let l = Light::new('p', (-7.0, 3.5, 5.0), (1.0, 1.0, 1.0), 40.0);
+    let l2 = Light::new('p', (7.0, 3.5, 5.0), (1.0, 1.0, 1.0), 40.0);
     let mut lights : Vec<Light> = Vec::new();
     lights.push(l);
+    lights.push(l2);
     lights.push(ambient);
 
     let mut pb = ProgressBar::new(NY as u64);
@@ -99,11 +111,11 @@ fn main() {
         }   
     }
     pb.finish_print("\ndone! writing ppm now.\n");
-    save_file(&rgb_data);
+    save_file(image_file, &rgb_data);
 }
 
-fn save_file(data: &Vec<(i32, i32, i32)>){
-    let mut file = File::create("test8.ppm").unwrap();
+fn save_file(image_file: &String, data: &Vec<(i32, i32, i32)>){
+    let mut file = File::create(image_file).unwrap();
     file.write_fmt(format_args!("P3\n{} {}\n{}\n", NX, NY, 255)).unwrap();
 
     let mut pb = ProgressBar::new(data.len() as u64);
