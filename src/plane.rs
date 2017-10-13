@@ -31,6 +31,7 @@ impl Hitable for Plane {
 
         if denominator != 0.0{
             let tmp = (-self.d - (-1.0 * self.normal).dot(&r.origin)) / denominator;
+            //let tmp = -(self.normal.dot(&r.origin) - self.d) / denominator;
             if (tmp < t_max) & (tmp > t_min) {
                 let p = r.pt_at_t(tmp);
                 hit = Some(HitRecord {
@@ -43,8 +44,6 @@ impl Hitable for Plane {
             }
             
         }
-
         hit
-
     }
 }

@@ -1,6 +1,5 @@
 /target/
 **/*.rs.bk
-/images/
 *.ppm
 /test_images/
 

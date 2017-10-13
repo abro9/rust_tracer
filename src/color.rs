@@ -14,7 +14,7 @@ pub fn new_color(r: &Ray, world: &HitList, lights: &Vec<Light>, depth: u32) -> V
         t = world.hit(r, 0.0, f64::MAX);
     }
     else {
-        t = world.hit(r, 0.05, f64::MAX);
+        t = world.hit(r, 0.01, f64::MAX);
     }
 
     match t {
@@ -44,9 +44,8 @@ pub fn new_color(r: &Ray, world: &HitList, lights: &Vec<Light>, depth: u32) -> V
             }
             let accum_vec = Vec3::new(accum.0, accum.1, accum.2);
 
-            if depth < 10 {
+            if depth < 1000 {
                 let rfl_ray = Ray::new_v(hr.p, reflect(r.dir, hr.normal)); 
-                //diffuse + spec + shadow_vec * hr.mat.ideal_spec * new_color(&rfl_ray, world, lights, depth + 1) 
                 accum_vec + hr.mat.ideal_spec * new_color(&rfl_ray, world, lights, depth + 1) 
             }
             else { Vec3::new(0.0, 0.0, 0.0) }

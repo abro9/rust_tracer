@@ -49,24 +49,32 @@ fn main() {
     let m4 = Material::new('l', 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 10);
     let m5 = Material::new('l', 0.2, 0.2, 0.2, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 5);
     let m6 = Material::new('l', 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 5);
+    let m7 = Material::new('l', 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 5);
+    let m8 = Material::new('l', 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 5);
 
     let s = Sphere::new((0.0, -1.0, -4.0), 0.5, &m2);
-    let s2 = Sphere::new((0.0, -101.5, -4.0), 100.0, &m5);
-    let s3 = Sphere::new((2.0, -1.02488, -5.0), 0.5, &m3);
-    let s4 = Sphere::new((-2.0, -1.02488, -5.0), 0.5, &m);
-    //let s3 = Sphere::new((2.0, 0.5, -5.0), 0.5, &m3);
-    //let s4 = Sphere::new((-2.0, 0.5, -5.0), 0.5, &m);
+    //let s2 = Sphere::new((0.0, -101.5, -4.0), 100.0, &m5);
+    //let s3 = Sphere::new((2.0, -1.02488, -5.0), 0.5, &m3);
+    //let s4 = Sphere::new((-2.0, -1.02488, -5.0), 0.5, &m);
+    let s3 = Sphere::new((2.0, -1.0, -5.0), 0.5, &m3);
+    let s4 = Sphere::new((-2.0, -1.0, -5.0), 0.5, &m);
     let s5 = Sphere::new((0.0, 2.5, -4.5), 1.5, &m6);
 
     let p = Plane::new((0.0, 0.0, -1.0), 12.0, &m4);
+    let p2 = Plane::new((1.0, 0.0, 0.0), 12.0, &m4);
+    let p3 = Plane::new((-1.0, 0.0, 0.0), 12.0, &m4);
+    let p4 = Plane::new((0.0, -1.0, 0.0), 1.5, &m4);
 
     let mut world = HitList::new();
     world.add_sphere(s);
-    world.add_sphere(s2);
+    //world.add_sphere(s2);
     world.add_sphere(s3);
     world.add_sphere(s4);
     world.add_sphere(s5);
     world.add_plane(p);
+    world.add_plane(p2);
+    world.add_plane(p3);
+    world.add_plane(p4);
 
     let ambient = Light::new('p', (0.0, 0.0, 0.0), (1.0, 1.0, 1.0), 1.0);
     let l = Light::new('p', (-7.0, 3.5, 5.0), (1.0, 1.0, 1.0), 40.0);
