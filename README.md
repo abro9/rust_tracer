@@ -13,4 +13,4 @@ Spheres and a plane
 
 reflections!
 
-![alt text](http://github.com/abro9/rust_tracer/blob/master/images/reflect.tiff "reflections!")
+![alt text](http://github.com/abro9/rust_tracer/blob/master/images/reflect.png "reflections!")
