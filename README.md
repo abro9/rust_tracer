@@ -8,4 +8,5 @@ A raytracer built using Rust.
 
 ## Example
 Spheres and a plane
+
 ![alt text](https://github.com/abro9/rust_tracer/blob/master/example.png "Some spheres")
