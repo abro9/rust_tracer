@@ -31,6 +31,13 @@ impl Vec3 {
         self.e[0] * other.e[0] + self.e[1] * other.e[1] + self.e[2] * other.e[2]
     }
 
+    pub fn cross(&self, other: &Vec3) -> Vec3 {
+        let x_val = self[1] * other[2] - self[2] * other[1];
+        let y_val = self[2] * other[0] - self[0] * other[2];
+        let z_val = self[0] * other[1] - self[1] * other[0];
+        Vec3::new(x_val, y_val, z_val)
+    }
+
     pub fn squared_length(&self) -> f64 {
         self.e[0] * self.e[0] + self.e[1] * self.e[1] + self.e[2] * self.e[2]
     }

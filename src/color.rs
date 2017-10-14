@@ -44,7 +44,7 @@ pub fn new_color(r: &Ray, world: &HitList, lights: &Vec<Light>, depth: u32) -> V
             }
             let accum_vec = Vec3::new(accum.0, accum.1, accum.2);
 
-            if depth < 1000 {
+            if depth < 10 {
                 let rfl_ray = Ray::new_v(hr.p, reflect(r.dir, hr.normal)); 
                 accum_vec + hr.mat.ideal_spec * new_color(&rfl_ray, world, lights, depth + 1) 
             }
