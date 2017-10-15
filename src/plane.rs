@@ -11,8 +11,8 @@ pub struct Plane {
 }
 
 impl Plane {
-    pub fn new(n: (f64, f64, f64), d: f64, m: &Material) -> Plane {
-        Plane{ normal: Vec3::new(n.0, n.1, n.2).get_unit() * -1.0,
+    pub fn new(n_x: f64, n_y: f64, n_z: f64, d: f64, m: &Material) -> Plane {
+        Plane{ normal: Vec3::new(n_x, n_y, n_z).get_unit() * -1.0,
                 d: d,
                 material: m.clone()}
     }

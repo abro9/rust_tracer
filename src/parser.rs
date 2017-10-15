@@ -23,7 +23,9 @@ pub fn parse(source_file: &String) -> (HitList, Vec<Light> ){
     let mut lights : Vec<Light> = Vec::new();
     let mut materials : Vec<Material> = Vec::new();
 
-    let mut mat_counter = -1;
+    let default_material = Material::new('l', 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.0, 0.0, 0.0, 100);
+    materials.push(default_material);
+    let mut mat_counter = 0;
 
     for line in file.lines() {
         let line = line.unwrap();
@@ -55,9 +57,22 @@ pub fn parse(source_file: &String) -> (HitList, Vec<Light> ){
                                    f64::from_str(line_vec[7]).unwrap());  
                 lights.push(l);
             }
-            //"s" => {
-                //let s = Sphere::new(
-            //}
+            "s" => {
+                let s = Sphere::new(f64::from_str(line_vec[1]).unwrap(),
+                                    f64::from_str(line_vec[2]).unwrap(),  
+                                    f64::from_str(line_vec[3]).unwrap(),  
+                                    f64::from_str(line_vec[4]).unwrap(),
+                                    &materials[mat_counter]);
+                world.add_sphere(s);    
+            }
+            "p" => {
+                let p = Plane::new(f64::from_str(line_vec[1]).unwrap(),
+                                   f64::from_str(line_vec[2]).unwrap(),  
+                                   f64::from_str(line_vec[3]).unwrap(),  
+                                   f64::from_str(line_vec[4]).unwrap(),
+                                   &materials[mat_counter]);
+                world.add_plane(p);
+            }
             _ => println!("not sick"),
         }
     }

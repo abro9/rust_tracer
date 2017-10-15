@@ -65,7 +65,7 @@ fn main() {
     let s4 = Sphere::new(-2.0, -1.0, -5.0, 0.5, &m);
     let s5 = Sphere::new(0.0, 2.5, -4.5, 1.5, &m6);
 
-    let p = Plane::new((0.0, 0.0, -1.0), 12.0, &m4);
+    let p = Plane::new(0.0, 0.0, -1.0, 12.0, &m4);
     //let p2 = Plane::new((1.0, 0.0, 0.0), 12.0, &m4);
     //let p3 = Plane::new((-1.0, 0.0, 0.0), 12.0, &m4);
     //let p4 = Plane::new((0.0, -1.0, 0.0), 1.5, &m4);
