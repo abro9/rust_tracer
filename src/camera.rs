@@ -21,7 +21,7 @@ impl Camera{
     pub fn get_ray(&self, u: f64, v: f64) -> Ray {
         let horiz_u = self.horizontal * u;
         let vert_v = self.vertical * v;
-        let dir = (self.lower_left_corner + horiz_u + vert_v).get_unit();
+        let dir = (self.lower_left_corner + horiz_u + vert_v);
 
         Ray::new_v(self.origin, dir)
     }

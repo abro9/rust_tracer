@@ -1,6 +1,8 @@
+extern crate rand;
 
 use ::vec3::Vec3;
 use ::ray::Ray;
+use rand::Rng;
 
 pub struct Camera2 {
     pub origin: Vec3,
@@ -37,11 +39,27 @@ impl Camera2 {
                   iw : iw,
                   ih : ih,
                   pw : pw,
-                  ph : pw,
+                  ph : ph,
                   u : _u.get_unit(),
                   v : _v.get_unit(),
                   w: _w,
         }
+    }
+
+    // [i=0, j=0] -> bottom left
+    pub fn generate_ray(&self, i: f64, j: f64) -> Ray {
+        let mut t_rng = rand::thread_rng();
+        let r = 0.5 * self.iw;
+        let l = -0.5 * self.iw;
+
+        let t = 0.5 * self.ih;
+        let b = -0.5 * self.ih;
+
+        let u = l + (r - l) * (i + t_rng.next_f64()) / self.pw as f64;
+        let v = b + (t - b) * (j + t_rng.next_f64()) / self.ph as f64;
+
+        let dir = self.w * -self.f_length + self.u * u + self.v * v;
+        Ray::new_v(self.origin, dir)
     }
 }
 
