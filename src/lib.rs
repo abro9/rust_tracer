@@ -12,3 +12,4 @@ pub mod material;
 pub mod light;
 pub mod plane;
 pub mod cam2;
+pub mod parser;

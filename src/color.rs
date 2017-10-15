@@ -23,12 +23,14 @@ pub fn new_color(r: &Ray, world: &HitList, lights: &Vec<Light>, depth: u32) -> V
             let mut accum = (0.0, 0.0, 0.0);
             for l in lights.iter() {
             let light_v = l.location - hr.p;
-            let atten = l.intensity / light_v.squared_length();
+            //let atten = l.intensity / light_v.squared_length();
+            let light_max_t = light_v.length();
+            let atten = 1.0 / light_v.squared_length();
             let light_v = light_v.get_unit();
             let h = (light_v + (-1.0 * r.dir)).get_unit();
 
             let shadow_ray = Ray::new_v(hr.p, light_v);
-            let t = world.hit(&shadow_ray, 0.1, (1.0/atten).sqrt() * l.intensity.sqrt());
+            let t = world.hit(&shadow_ray, 0.1, light_max_t);
             let shadow_vec = match t {
                 Some(_) => Vec3::new(0.0, 0.0, 0.0),
                 None => Vec3::new(1.0, 1.0, 1.0) };

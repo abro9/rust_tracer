@@ -11,8 +11,8 @@ pub struct Sphere {
 }
 
 impl Sphere {
-    pub fn new(c: (f64, f64, f64), r: f64, m: &Material) -> Sphere {
-        Sphere{ center: Vec3::new(c.0, c.1, c.2),
+    pub fn new(c_x: f64, c_y: f64, c_z: f64, r: f64, m: &Material) -> Sphere {
+        Sphere{ center: Vec3::new(c_x, c_y, c_z),
                 radius: r,
                 material: m.clone()}
     }

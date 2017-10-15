@@ -18,6 +18,7 @@ use rust_tracer::camera::Camera;
 use rust_tracer::material::Material;
 use rust_tracer::light::Light;
 use rust_tracer::plane::Plane;
+use rust_tracer::parser;
 
 const NX: usize = 1200;
 const NY: usize = 600;
@@ -26,9 +27,9 @@ const RPP: usize = 50;
 fn main() {
     let args: Vec<String> = env::args().collect();
     let image_file = &args[1];
-    //let scene_file = &args[2];
+    let scene_file = &args[2];
 
-    //let (world, lights) = parser::parse(scene_file);
+    let (worldx, lightsx) = parser::parse(scene_file);
 
     let nx_f = NX as f64;
     let ny_f = NY as f64;
@@ -40,7 +41,7 @@ fn main() {
     let lower_left_corner = Vec3::new(-2.0, -1.0, -1.0);
     let horizontal = Vec3::new(4.0, 0.0, 0.0);
     let vertical = Vec3::new(0.0, 2.0, 0.0);
-    let origin = Vec3::new(0.0, 2.5, 0.0);
+    let origin = Vec3::new(0.0, 0.0, 0.0);
 
     let cam_dir = Vec3::new(0.0, 0.0, -1.0);
 
@@ -56,13 +57,13 @@ fn main() {
     let m7 = Material::new('l', 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 5);
     let m8 = Material::new('l', 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 5);
 
-    let s = Sphere::new((0.0, -1.0, -4.0), 0.5, &m2);
-    let s2 = Sphere::new((0.0, -101.5, -4.0), 100.0, &m5);
+    let s = Sphere::new(0.0, -1.0, -4.0, 0.5, &m2);
+    let s2 = Sphere::new(0.0, -101.5, -4.0, 100.0, &m5);
     //let s3 = Sphere::new((2.0, -1.02488, -5.0), 0.5, &m3);
     //let s4 = Sphere::new((-2.0, -1.02488, -5.0), 0.5, &m);
-    let s3 = Sphere::new((2.0, -1.0, -5.0), 0.5, &m3);
-    let s4 = Sphere::new((-2.0, -1.0, -5.0), 0.5, &m);
-    let s5 = Sphere::new((0.0, 2.5, -4.5), 1.5, &m6);
+    let s3 = Sphere::new(2.0, -1.0, -5.0, 0.5, &m3);
+    let s4 = Sphere::new(-2.0, -1.0, -5.0, 0.5, &m);
+    let s5 = Sphere::new(0.0, 2.5, -4.5, 1.5, &m6);
 
     let p = Plane::new((0.0, 0.0, -1.0), 12.0, &m4);
     //let p2 = Plane::new((1.0, 0.0, 0.0), 12.0, &m4);
@@ -80,9 +81,9 @@ fn main() {
     //world.add_plane(p3);
     //world.add_plane(p4);
 
-    let ambient = Light::new('p', (0.0, 0.0, 0.0), (1.0, 1.0, 1.0), 1.0);
-    let l = Light::new('p', (-7.0, 3.5, 5.0), (1.0, 1.0, 1.0), 40.0);
-    let l2 = Light::new('p', (7.0, 3.5, 5.0), (1.0, 1.0, 1.0), 40.0);
+    let ambient = Light::new('p', 0.0, 0.0, 0.0, 1.0, 1.0, 1.0,);
+    let l = Light::new('p', -7.0, 3.5, 5.0, 40.0, 40.0, 40.0);
+    let l2 = Light::new('p', 7.0, 3.5, 5.0, 40.0, 40.0, 40.0);
     let mut lights : Vec<Light> = Vec::new();
     lights.push(l);
     lights.push(l2);
