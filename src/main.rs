@@ -102,7 +102,7 @@ fn main() {
                 //let ray = cam.get_ray(u, v);
                 let ray = cam2.generate_ray(i as f64, j as f64);
 
-                let c = color::new_color(&ray, &world, &lights, 0);
+                let c = color::new_color(&ray, &worldx, &lightsx, 0);
                 //let c = color::color(&ray, &world, 0);
                 rgb.0 += c[0];
                 rgb.1 += c[1];

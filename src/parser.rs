@@ -40,10 +40,10 @@ pub fn parse(source_file: &String) -> (HitList, Vec<Light> ){
                                       f64::from_str(line_vec[4]).unwrap(),
                                       f64::from_str(line_vec[5]).unwrap(),
                                       f64::from_str(line_vec[6]).unwrap(),
-                                      f64::from_str(line_vec[7]).unwrap(),
                                       f64::from_str(line_vec[8]).unwrap(),
                                       f64::from_str(line_vec[9]).unwrap(),
-                                      f64::from_str(line_vec[10]).unwrap() as i32);
+                                      f64::from_str(line_vec[10]).unwrap(),
+                                      f64::from_str(line_vec[7]).unwrap() as i32);
                 materials.push(m);
                 mat_counter += 1;
             }
@@ -73,7 +73,7 @@ pub fn parse(source_file: &String) -> (HitList, Vec<Light> ){
                                    &materials[mat_counter]);
                 world.add_plane(p);
             }
-            _ => println!("not sick"),
+            _ => ()//println!("not sick"),
         }
     }
     (world, lights)
