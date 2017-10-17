@@ -1,28 +1,28 @@
 extern crate rust_tracer;
-extern crate rand;
-extern crate pbr;
+//extern crate rand;
+//extern crate pbr;
 
-use pbr::ProgressBar;
-use rand::Rng;
-use std::f64;
-use std::fs::File;
-use std::io::Write;
+//use pbr::ProgressBar;
+//use rand::Rng;
+//use std::f64;
+//use std::fs::File;
+//use std::io::Write;
 use std::env;
 
-use rust_tracer::cam2::Camera2;
-use rust_tracer::vec3::Vec3;
-use rust_tracer::sphere::Sphere;
-use rust_tracer::color;
-use rust_tracer::hitlist::HitList;
-use rust_tracer::camera::Camera;
-use rust_tracer::material::Material;
-use rust_tracer::light::Light;
-use rust_tracer::plane::Plane;
+//use rust_tracer::cam2::Camera2;
+//use rust_tracer::vec3::Vec3;
+//use rust_tracer::sphere::Sphere;
+//use rust_tracer::color;
+//use rust_tracer::hitlist::HitList;
+//use rust_tracer::camera::Camera;
+//use rust_tracer::material::Material;
+//use rust_tracer::light::Light;
+//use rust_tracer::plane::Plane;
 use rust_tracer::parser;
 
-const NX: usize = 1200;
-const NY: usize = 600;
-const RPP: usize = 5;
+//const NX: usize = 1200;
+//const NY: usize = 600;
+const RPP: usize = 25;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -33,12 +33,6 @@ fn main() {
 
     cam2x.render_scene(&worldx, &lightsx, RPP, image_file);
 }
-    //let nx_f = NX as f64;
-    //let ny_f = NY as f64;
-    //let rpp_f = RPP as f64;
-    
-    //let data_size: usize = NX * NY;
-    //let mut rgb_data: Vec<(i32,i32,i32)> = Vec::with_capacity(data_size);
 
     //let lower_left_corner = Vec3::new(-2.0, -1.0, -1.0);
     //let horizontal = Vec3::new(4.0, 0.0, 0.0);
@@ -130,15 +124,3 @@ fn main() {
    // save_file(image_file, &rgb_data);
 //}
 
-fn save_file(image_file: &String, data: &Vec<(i32, i32, i32)>){
-    let mut file = File::create(image_file).unwrap();
-    file.write_fmt(format_args!("P3\n{} {}\n{}\n", NX, NY, 255)).unwrap();
-
-    let mut pb = ProgressBar::new(data.len() as u64);
-
-    for rgb in data.iter() {
-        file.write_fmt(format_args!("{} {} {}\n", rgb.0, rgb.1, rgb.2)).unwrap();
-        pb.inc();
-    }
-    pb.finish_print("\nimage saved!");
-}

@@ -2,14 +2,16 @@ extern crate rand;
 extern crate pbr;
 
 use pbr::ProgressBar;
+
 use std::fs::File;
 use std::io::Write;
+use rand::Rng;
+
+use ::color;
 use ::vec3::Vec3;
 use ::ray::Ray;
-use rand::Rng;
 use ::hitlist::HitList;
 use ::light::Light;
-use ::color;
 
 pub struct Camera2 {
     pub origin: Vec3,
@@ -103,7 +105,8 @@ impl Camera2 {
         }
         pb.finish_print("\ndone! writing ppm now.\n");
         self.save_file(image_file, &rgb_data);
-    } 
+    }
+
     pub fn save_file(&self, image_file: &String, data: &Vec<(i32, i32, i32)>){
         let mut file = File::create(image_file).unwrap();
         file.write_fmt(format_args!("P3\n{} {}\n{}\n", self.pw, self.ph, 255)).unwrap();
