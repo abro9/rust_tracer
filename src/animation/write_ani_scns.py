@@ -38,8 +38,13 @@ def render_all(scn_dir):
 		print("SCN dir does not exist!")
 		exit(0)
 
+	unformatted_cmd = '../../target/release/rust_tracer orig_img/%s orig/%s png'
+
 	for scn in os.listdir(scn_dir):
-		print(scn)
+		base_file_name = scn.split('.')[0]
+		cmd = unformatted_cmd % (base_file_name, scn)
+		os.system(cmd)
+		# print(cmd)
 
 
 if __name__ == "__main__":
