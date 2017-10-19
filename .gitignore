@@ -5,6 +5,6 @@
 !images/*.png
 
 /test_images/
-/venv/
+src/animation/venv/
 *.pyc
 .DS_Store
