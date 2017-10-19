@@ -1,5 +1,6 @@
 extern crate rand;
 extern crate pbr;
+extern crate image;
 
 use pbr::ProgressBar;
 
@@ -71,10 +72,11 @@ impl Camera2 {
         Ray::new_v(self.origin, dir)
     }
 
-    pub fn render_scene(&self, world: &HitList, lights: &Vec<Light>, rpp: usize, image_file: &String){
+    pub fn render_scene(&self, world: &HitList, lights: &Vec<Light>, rpp: usize, image_file: &String, out_type: &String){
         let rpp_f = rpp as f64;
         let mut pb = ProgressBar::new(self.ph as u64);
-        let mut rgb_data: Vec<(i32, i32, i32)> = Vec::with_capacity(self.pw * self.ph);
+        //let mut rgb_data: Vec<(u8, u8, u8)> = Vec::with_capacity(self.pw * self.ph);
+        let mut rgb_data2: Vec<u8> = Vec::with_capacity(3 * self.pw * self.ph);
         for j in (0..self.ph).rev() {
             pb.inc();
             for i in 0..self.pw {
@@ -96,28 +98,43 @@ impl Camera2 {
                 rgb.1 = if rgb.1 > 255.99 {255.99} else {rgb.1};
                 rgb.2 = if rgb.2 > 255.99 {255.99} else {rgb.2};
 
-                let ir = rgb.0 as i32;
-                let ig = rgb.1 as i32;
-                let ib = rgb.2 as i32;
+                let ir = rgb.0 as u8;
+                let ig = rgb.1 as u8;
+                let ib = rgb.2 as u8;
 
-                rgb_data.push((ir, ig, ib));
+                rgb_data2.push(ir);
+                rgb_data2.push(ig);
+                rgb_data2.push(ib);
+                //rgb_data.push((ir, ig, ib));
             }
         }
         pb.finish_print("\ndone! writing ppm now.\n");
-        self.save_file(image_file, &rgb_data);
+        //self.save_file(image_file, &rgb_data2);
+        self.img_write(image_file, out_type, &rgb_data2);
     }
-
-    pub fn save_file(&self, image_file: &String, data: &Vec<(i32, i32, i32)>){
+    
+    // SLOW, USE ONLY FOR DEBUGGING
+    pub fn save_file(&self, image_file: &String, data: &Vec<u8>){
         let mut file = File::create(image_file).unwrap();
-        file.write_fmt(format_args!("P3\n{} {}\n{}\n", self.pw, self.ph, 255)).unwrap();
+        file.write_fmt(format_args!("P3\n{} {}\n{}", self.pw, self.ph, 255)).unwrap();
 
         let mut pb = ProgressBar::new(data.len() as u64);
 
-        for rgb in data.iter() {
-            file.write_fmt(format_args!("{} {} {}\n", rgb.0, rgb.1, rgb.2)).unwrap();
+        for (i, rgb) in data.iter().enumerate() {
+            if i % 3 == 0 {
+                file.write_fmt(format_args!("\n{}", rgb)).unwrap();
+            }
+            else {
+                file.write_fmt(format_args!(" {}", rgb)).unwrap();
+            }
             pb.inc();
         }
         pb.finish_print("\nimage saved!");
+    }
+
+    pub fn img_write(&self, image_file: &String, file_type: &String, data: &Vec<u8>){
+        let path_string = format!("{}.{}", image_file, file_type);
+        image::save_buffer(path_string, data, self.pw as u32, self.ph as u32, image::RGB(8)).unwrap();
     }
 }
 

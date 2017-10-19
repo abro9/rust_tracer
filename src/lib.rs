@@ -1,5 +1,6 @@
 extern crate rand;
 extern crate pbr;
+extern crate image;
 
 pub mod vec3;
 pub mod ray;

@@ -28,10 +28,11 @@ fn main() {
     let args: Vec<String> = env::args().collect();
     let image_file = &args[1];
     let scene_file = &args[2];
+    let out_type = &args[3];
 
     let (worldx, lightsx, cam2x) = parser::parse(scene_file);
 
-    cam2x.render_scene(&worldx, &lightsx, RPP, image_file);
+    cam2x.render_scene(&worldx, &lightsx, RPP, image_file, out_type);
 }
 
     //let lower_left_corner = Vec3::new(-2.0, -1.0, -1.0);
