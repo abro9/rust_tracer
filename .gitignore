@@ -1,6 +1,9 @@
 /target/
 **/*.rs.bk
 *.ppm
+*.png
+!images/*.png
+
 /test_images/
 /venv/
 *.pyc
