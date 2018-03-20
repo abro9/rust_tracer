@@ -6,12 +6,12 @@ use std::io::{BufReader, BufRead};
 use ::vec3::Vec3;
 use ::sphere::Sphere;
 use ::hitlist::HitList;
-use ::cam2::Camera2;
+use ::camera::Camera;
 use ::material::Material;
 use ::light::Light;
 use ::plane::Plane;
 
-pub fn parse(source_file: &String) -> (HitList, Vec<Light>, Camera2){
+pub fn parse(source_file: &String) -> (HitList, Vec<Light>, Camera){
     let f = File::open(source_file).unwrap();
     let file = BufReader::new(f);
 
@@ -21,7 +21,7 @@ pub fn parse(source_file: &String) -> (HitList, Vec<Light>, Camera2){
 
     let c_ori = Vec3::new(0.0, 0.0, 0.0);
     let c_dir = Vec3::new(0.0, 0.0, -1.0);
-    let mut cam : Camera2 = Camera2::new_v(c_ori, c_dir, 1.0, 4., 2., 1200, 600);
+    let mut cam : Camera = Camera::new_v(c_ori, c_dir, 1.0, 4., 2., 1200, 600);
 
     let default_material = Material::new('l', 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.0, 0.0, 0.0, 100);
     materials.push(default_material);
@@ -80,7 +80,7 @@ pub fn parse(source_file: &String) -> (HitList, Vec<Light>, Camera2){
                 let cam_dir = Vec3::new(f64::from_str(line_vec[4]).unwrap(),
                                         f64::from_str(line_vec[5]).unwrap(),
                                         f64::from_str(line_vec[6]).unwrap());
-                cam = Camera2::new_v(origin,
+                cam = Camera::new_v(origin,
                                          cam_dir,
                                          f64::from_str(line_vec[7]).unwrap(),
                                          f64::from_str(line_vec[8]).unwrap(),

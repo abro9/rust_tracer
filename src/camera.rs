@@ -14,7 +14,7 @@ use ::ray::Ray;
 use ::hitlist::HitList;
 use ::light::Light;
 
-pub struct Camera2 {
+pub struct Camera {
     pub origin: Vec3,
     pub dir: Vec3,
     pub f_length: f64,
@@ -27,8 +27,8 @@ pub struct Camera2 {
     pub w: Vec3,
 }
 
-impl Camera2 {
-    pub fn new_v(o: Vec3, dir: Vec3, d: f64, iw: f64, ih: f64, pw: usize, ph: usize) -> Camera2 {
+impl Camera {
+    pub fn new_v(o: Vec3, dir: Vec3, d: f64, iw: f64, ih: f64, pw: usize, ph: usize) -> Camera {
         let _w = (dir * -1.0).get_unit();
         let mut _u = Vec3::new(0.0, 0.0, 0.0);
         let mut _v = Vec3::new(0.0, 0.0, 0.0);
@@ -43,7 +43,7 @@ impl Camera2 {
             _v = _u.cross(&dir);
         }
 
-        Camera2 { origin : o,
+        Camera { origin : o,
                   dir : dir,
                   f_length : d,
                   iw : iw,
@@ -75,7 +75,7 @@ impl Camera2 {
     pub fn render_scene(&self, world: &HitList, lights: &Vec<Light>, rpp: usize, image_file: &String, out_type: &String){
         let rpp_f = rpp as f64;
         let mut pb = ProgressBar::new(self.ph as u64);
-        let mut rgb_data2: Vec<u8> = Vec::with_capacity(3 * self.pw * self.ph);
+        let mut rgb_data: Vec<u8> = Vec::with_capacity(3 * self.pw * self.ph);
 
         for j in (0..self.ph).rev() {
             pb.inc();
@@ -102,15 +102,14 @@ impl Camera2 {
                 let ig = rgb.1 as u8;
                 let ib = rgb.2 as u8;
 
-                rgb_data2.push(ir);
-                rgb_data2.push(ig);
-                rgb_data2.push(ib);
-                //rgb_data.push((ir, ig, ib));
+                rgb_data.push(ir);
+                rgb_data.push(ig);
+                rgb_data.push(ib);
             }
         }
-        pb.finish_print("\ndone! writing ppm now.\n");
+        pb.finish_print("\nDone! Writing to file.");
         //self.save_file(image_file, &rgb_data2);
-        self.img_write(image_file, out_type, &rgb_data2);
+        self.img_write(image_file, out_type, &rgb_data);
     }
     
     // SLOW, USE ONLY FOR DEBUGGING

@@ -78,10 +78,6 @@ impl Clone for Material {
     }
 }
 
-//pub fn reflect( v: &Vec3, n: &Vec3) -> Vec3 {
-//    v.v_sub(&(&n.s_mult(2.0)).s_mult(v.dot(n)))
-//}
-
 pub fn reflect( v: Vec3, n: Vec3) -> Vec3 {
     v - 2.0 * v.dot(&n) * n
 }
