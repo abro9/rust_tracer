@@ -1,17 +1,12 @@
-use rand::Rng;
 use std::f64;
 use std::str::FromStr;
 use std::fs::File;
-use std::io::Write;
-use std::io::BufReader;
-use std::io;
-use std::io::prelude::*;
+use std::io::{BufReader, BufRead};
 
 use ::vec3::Vec3;
 use ::sphere::Sphere;
 use ::hitlist::HitList;
 use ::cam2::Camera2;
-use ::camera::Camera;
 use ::material::Material;
 use ::light::Light;
 use ::plane::Plane;
@@ -93,7 +88,7 @@ pub fn parse(source_file: &String) -> (HitList, Vec<Light>, Camera2){
                                          usize::from_str(line_vec[10]).unwrap(),
                                          usize::from_str(line_vec[11]).unwrap());
             }
-            _ => ()//println!("not sick"),
+            _ => (),
         }
     }
     (world, lights, cam)

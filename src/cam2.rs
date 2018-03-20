@@ -75,8 +75,8 @@ impl Camera2 {
     pub fn render_scene(&self, world: &HitList, lights: &Vec<Light>, rpp: usize, image_file: &String, out_type: &String){
         let rpp_f = rpp as f64;
         let mut pb = ProgressBar::new(self.ph as u64);
-        //let mut rgb_data: Vec<(u8, u8, u8)> = Vec::with_capacity(self.pw * self.ph);
         let mut rgb_data2: Vec<u8> = Vec::with_capacity(3 * self.pw * self.ph);
+
         for j in (0..self.ph).rev() {
             pb.inc();
             for i in 0..self.pw {
